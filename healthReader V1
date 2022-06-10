@@ -1,0 +1,22 @@
+from PIL import ImageGrab
+from PIL import Image
+import pytesseract as pt
+import time
+pt.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+
+healthCords = (595, 1295)
+box = (healthCords[0], healthCords[1], healthCords[0] + 70, healthCords[1] + 25)
+time.sleep(5)
+
+def healthRead():
+    healthImg = ImageGrab.grab(bbox=(box))
+    bigHealthImg = healthImg.resize((350, 125))
+    
+    health = pt.image_to_string(bigHealthImg)
+    print (health)
+    time.sleep(2)
+    bigHealthImg.show()
+
+time.sleep(2)
+
+healthRead()
