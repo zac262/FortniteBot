@@ -1,0 +1,35 @@
+from PIL import ImageGrab
+from PIL import Image
+from PIL import ImageEnhance
+import PIL
+import pytesseract as pt
+import time
+import keyboard
+pt.pytesseract.tesseract_cmd = r'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
+
+healthCords = (595, 1295) # 1440p 100%
+#healthCords = (300, 910) # 1080 70%
+box = (healthCords[0], healthCords[1], healthCords[0] + 70, healthCords[1] + 25)
+time.sleep(5)
+
+def healthRead():
+    healthImg = ImageGrab.grab(bbox=(box))
+    
+    processedHealthImg = PIL.ImageOps.grayscale(healthImg)
+    processedHealthImg = PIL.ImageOps.invert(processedHealthImg)
+    processedHealthImg = PIL.ImageOps.autocontrast(processedHealthImg)
+    
+    enhancer1 = ImageEnhance.Sharpness(processedHealthImg)
+    processedHealthImg = enhancer1.enhance(1.5)
+    
+    
+    health = pt.image_to_string(processedHealthImg, lang = "eng", config = "--psm 10 --oem  3 -c tessedit_char_whitelist=0123456789")
+    
+    
+    print ("Health: " + health)
+
+
+while (keyboard.is_pressed('l')) == False:
+    healthRead()
+    time.sleep(0.5)
+   
